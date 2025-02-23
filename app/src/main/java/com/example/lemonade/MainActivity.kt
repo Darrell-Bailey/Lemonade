@@ -5,7 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -23,9 +26,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.lemonade.ui.theme.LemonadeTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,7 +46,7 @@ class MainActivity : ComponentActivity() {
                 color = MaterialTheme.colorScheme.background
             ) {
                 LemonadeTheme {
-                    MakeLemonade()
+                    LemonadeApp()
                 }
             }
         }
@@ -80,32 +88,56 @@ fun MakeLemonade(modifier: Modifier = Modifier) {
         else -> R.string.empty_glass_action
     }
 
-    Column {
+    Column (
+        modifier = modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             text = stringResource(textLabelResource),
+            fontSize = 28.sp,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
             modifier = modifier
+                .weight(0.1f)
+                .fillMaxSize()
+                .background(Color.Yellow)
+                .wrapContentSize()
         )
-        Column {
+        Spacer(Modifier.weight(0.3f))
+        Column (
+            modifier = modifier
+                .weight(1f)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ){
             Button(onClick = {
-                if((neededTaps <= numberOfTaps) && (step <= 3)){
-                    neededTaps = (2..4).random()
-                    numberOfTaps = 0
-                    step++
-                }else{
+                if((neededTaps <= numberOfTaps) && (step > 3)){
                     neededTaps = (2..4).random()
                     numberOfTaps = 0
                     step = 1
+                }else if((neededTaps <= numberOfTaps)){
+                    neededTaps = (2..4).random()
+                    numberOfTaps = 0
+                    step++
+                }else {
+                    numberOfTaps++
                 }
-                numberOfTaps++
-            }) {
+            }
+            ) {
                 Image(
                     painter = painterResource(imageResource),
-                    contentDescription = null
+                    contentDescription = step.toString()
                 )
             }
             Text(
                 text = stringResource(textActionResource),
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
                 modifier = modifier
+                    .fillMaxSize()
+                    .padding(top = 24.dp)
             )
         }
     }
